@@ -10,7 +10,7 @@ from app.core.security import settings
 
 security_scheme = HTTPBearer()
 
-def get_current_uset(
+def get_current_user(
         credentials:HTTPAuthorizationCredentials=Depends(security_scheme),
         db:Session=Depends(get_db)
 ) -> User:
