@@ -4,6 +4,11 @@ class UserCreate(BaseModel):
     email:EmailStr
     passwprd:str
 
+class UserLogin(BaseModel):
+    email:EmailStr
+    passwprd:str
+
+
 class UserResponse(BaseModel):
     id:int
     email:EmailStr
@@ -11,4 +16,6 @@ class UserResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-        
+class TokenResponse(BaseModel):
+    access_token:str
+    token_type:str='bearer'
