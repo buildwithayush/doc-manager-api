@@ -1,4 +1,7 @@
 from sqlalchemy import Integer,Boolean,String
+from datetime import datetime
+from sqlalchemy import DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped,mapped_column
 from app.database import Base
 
@@ -9,3 +12,4 @@ class User(Base):
     email:Mapped[str]=mapped_column(String,unique=True,nullable=False,index=True)
     hashed_password:Mapped[str]=mapped_column(String,nullable=False)
     is_active:Mapped[str]=mapped_column(Boolean,default=True)
+    created_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),server_default=func.now())
