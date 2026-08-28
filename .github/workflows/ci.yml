@@ -19,7 +19,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: doc_manager_db
+          POSTGRES_DB: doc_manager_test_db
 
         ports:
           - 5432:5432
