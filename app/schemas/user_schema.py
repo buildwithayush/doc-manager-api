@@ -2,7 +2,7 @@ from pydantic import BaseModel,EmailStr,ConfigDict
 
 class UserCreate(BaseModel):
     email:EmailStr
-    passwprd:str
+    password:str
 
 class UserLogin(BaseModel):
     email:EmailStr

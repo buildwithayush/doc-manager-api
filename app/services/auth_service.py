@@ -18,7 +18,7 @@ def register_new_user(
 
     new_user = User(
         email = user_in.email,
-        hashed_password = hash_password(password=user_in.passwprd)
+        hashed_password = hash_password(password=user_in.password)
     )
 
     db.add(new_user)
