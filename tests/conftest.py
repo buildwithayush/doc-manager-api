@@ -29,4 +29,16 @@ def client():
    app.dependency_overrides[get_db] = overridden_get_db
    with TestClient(app) as test_client:
       yield test_client
-   app.dependency_overrides.clear()   
+   app.dependency_overrides.clear() 
+
+@pytest.fixture()
+def test_user(client):
+   payload ={
+       "email": "tester@example.com",
+       "password": "strongpassword123"
+   }
+   client.post("/api/v1/auth/signup", json=payload)
+
+   return payload
+
+
