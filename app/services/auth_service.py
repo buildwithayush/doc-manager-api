@@ -36,7 +36,7 @@ def authenticate_user(db:Session,login_in:UserLogin) -> TokenResponse:
             detail='Invalid email or password'
         )
 
-    if not verify_password(login_in.passwprd,user.hashed_password):
+    if not verify_password(login_in.password,user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid email or password'

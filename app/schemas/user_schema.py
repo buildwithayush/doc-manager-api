@@ -6,7 +6,7 @@ class UserCreate(BaseModel):
 
 class UserLogin(BaseModel):
     email:EmailStr
-    passwprd:str
+    password:str
 
 
 class UserResponse(BaseModel):
