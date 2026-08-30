@@ -11,7 +11,7 @@ class DocumentCreate(DocumentBase):
     pass
 
 class DocumentUpdate(BaseModel):
-    title :str|None = Field(None,min_length=1,max_digits=255)
+    title :str|None = Field(None,min_length=1,max_length=255)
     description:str|None = None
 
 class DocumentResponse(DocumentBase):
