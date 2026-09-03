@@ -23,13 +23,15 @@ def get_current_user(
 
     try:
       payload = jwt.decode(token,settings.SECRET_KEY,algorithms=[settings.ALGORITHM])
-      user_id: str | None = payload.get("sub")
+      user_id = payload.get("sub")
+
       if user_id is None:
          raise credentials_exception
       
+      user_id = int(user_id)
     except InvalidTokenError:
        raise credentials_exception
-
+    
     user = db.query(User).filter(User.id == user_id).first()
     if user is None or not user.is_active:
        raise credentials_exception
