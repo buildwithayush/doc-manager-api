@@ -1,12 +1,13 @@
+from app.services import storage_services
 from app.services.document_service import create_document,get_user_document,get_document_by_id
 from app.services.document_service import delete_document ,update_document
 from sqlalchemy.orm import Session
 from app.schemas.document_schema import DocumentCreate,DocumentResponse,DocumentUpdate
-from fastapi import APIRouter,Depends,status,Query
+from fastapi import APIRouter,Depends, File, Form, UploadFile,status,Query
 from app.database import get_db
 from app.api.deps import get_current_user
 from app.models.user_model import User
-
+from app.services.storage_services import upload_file_to_minio,create_document_with_file
 router = APIRouter()
 
 @router.post('/',response_model=DocumentResponse,status_code=status.HTTP_201_CREATED)
@@ -33,3 +34,24 @@ def update_single_document(doc_id:int,doc_in:DocumentUpdate,db:Session=Depends(g
 def delete_single_document(id:int,db:Session = Depends(get_db),current_user:User=Depends(get_current_user)):
      delete_document(db=db,doc_id=id,user_id=current_user.id)
      return None
+
+@router.post('/upload',response_model=DocumentResponse,status_code=status.HTTP_201_CREATED)
+def upload_document(
+    title: str = Form(...,min_length=1,max_length=255),
+    description: str | None = Form(None),
+    file:UploadFile = File(...),
+    db:Session = Depends(get_db),
+    current_user:User = Depends(get_current_user)
+):
+    object_path, file_size = upload_file_to_minio(file=file,user_id=current_user.id)
+
+    return create_document_with_file(
+        db=db,
+        title=title,
+        description=description,
+        file_name=file.filename or "uploaded_file",
+        file_path=object_path,
+        file_type=file.content_type or "application/octet-stream",
+        file_size=file_size,
+        user_id=current_user.id
+    )
