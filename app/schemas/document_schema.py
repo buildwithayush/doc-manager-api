@@ -17,6 +17,10 @@ class DocumentUpdate(BaseModel):
 class DocumentResponse(DocumentBase):
     id: int
     user_id: int
+    file_name:str
+    file_type:str
+    file_size:int
+    file_path:str
     created_at: datetime
     updated_at: datetime
 
