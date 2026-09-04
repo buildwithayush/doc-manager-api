@@ -20,4 +20,10 @@ class Document(Base):
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
+    file_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    file_path: Mapped[str] = mapped_column(String(512), nullable=False)   
+    file_type: Mapped[str] = mapped_column(String(100), nullable=False)   
+    file_size: Mapped[int] = mapped_column(Integer, nullable=False)
+
+
     owner: Mapped['User'] = relationship('User', back_populates='documents')
