@@ -7,9 +7,6 @@ class DocumentBase(BaseModel):
     description: str|None = Field(None,examples=['Annual architecture proposal'])
 
 # Create Document
-class DocumentCreate(DocumentBase):
-    pass
-
 class DocumentUpdate(BaseModel):
     title :str|None = Field(None,min_length=1,max_length=255)
     description:str|None = None
