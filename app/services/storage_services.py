@@ -1,10 +1,14 @@
 from minio import Minio
 from minio.error import S3Error
 from app.core.config import settings
-from fastapi import UploadFile,HTTPException,status
+from fastapi import UploadFile, HTTPException, status
 import uuid
 from sqlalchemy.orm import Session
 from app.models.document_model import Document
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 minio_client = Minio(
     endpoint=settings.MINIO_ENDPOINT,
@@ -33,7 +37,7 @@ def check_storage_health() -> bool:
 
 def validate_file(file:UploadFile) -> None:
     filename = file.filename or ""
-    ext = filename.split(".")[-1].lower() if "." in filename else ""
+    ext = filename.rsplit(".",1)[-1].lower() if "." in filename else ""
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -75,30 +79,20 @@ def upload_file_to_minio(file:UploadFile,user_id:int) -> tuple[str,int]:
 
     return object_name, file_size
 
-def create_document_with_file(
-        db:Session,
-        title:str,
-        description:str | None,
-        file_name:str,
-        file_path:str,
-        file_type:str,
-        file_size:int,
-        user_id:int
-) -> Document:
-    new_doc = Document(
-        title = title,
-        description=description,
-        file_name = file_name,
-        file_path = file_path,
-        file_type = file_type,
-        file_size=file_size,
-        user_id=user_id
-    )
-    db.add(new_doc)
-    db.commit()
-    db.refresh(new_doc)
-    return new_doc
+
+def delete_file_from_minio(object_path:str):
+    try:
+        minio_client.remove_object(bucket_name=settings.MINIO_BUCKET_NAME,object_name=object_path)
+
+    except S3Error as err:
+        logger.error(f"Failed to delete {object_path} from MinIO: {err}")
+
+def get_file_from_minio(object_path:str):
+    try:
+        minio_client.get_object(bucket_name=settings.MINIO_BUCKET_NAME,object_name=object_path)
+
+    except S3Error as err:
+            logger.error(f"Failed to get {object_path} from MinIO: {err}")
 
 
-    
         
