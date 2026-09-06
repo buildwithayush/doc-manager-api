@@ -3,12 +3,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.v1.router import router as api_router
-from app.database import Base, engine
-from app.services.storage_services import init_storage,check_storage_health
+from app.core.config import settings
+from app.services.storage_services import init_storage
 
 @asynccontextmanager
-async def lifespan(app:FastAPI):
-    init_storage()
+async def lifespan(app: FastAPI):
+    if not settings.TESTING:
+        init_storage()
+
     yield
 
 
