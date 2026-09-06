@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     SECRET_KEY:str ="secret_key"
     ALGORITHM: str="HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES:int=60
+    TESTING: bool = False
 
     MINIO_ENDPOINT: str = ""
     MINIO_ACCESS_KEY: str = ""
