@@ -40,8 +40,8 @@ def get_single_document(id:int,db:Session=Depends(get_db),current_user:User=Depe
     return get_document_by_id(doc_id=id,user_id=current_user.id,db=db)
 
 @router.patch('/{id}',response_model=DocumentResponse)
-def update_single_document(doc_id:int,doc_in:DocumentUpdate,db:Session=Depends(get_db),current_user:User=Depends(get_current_user)):
-    return update_document(db=db,doc_id=doc_id,user_id=current_user.id,doc_in=doc_in)
+def update_single_document(id:int,doc_in:DocumentUpdate,db:Session=Depends(get_db),current_user:User=Depends(get_current_user)):
+    return update_document(db=db,doc_id=id,user_id=current_user.id,doc_in=doc_in)
 
 @router.delete('/{id}',status_code=status.HTTP_204_NO_CONTENT)
 def delete_single_document(id:int,db:Session = Depends(get_db),current_user:User=Depends(get_current_user)):
