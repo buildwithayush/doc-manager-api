@@ -13,7 +13,8 @@ class Settings(BaseSettings):
     MINIO_SECRET_KEY: str = ""
     MINIO_BUCKET_NAME: str = "documents"
     MINIO_SECURE: bool = False
-
+    MINIO_TEST_BUCKET_NAME: str = "documents-test"
+    
     model_config = SettingsConfigDict(env_file = '.env',extra='ignore')
 
 settings = Settings()    
