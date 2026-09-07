@@ -29,6 +29,22 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
+      minio:
+        image: minio/minio:latest
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin123
+
+        ports:
+          - 9000:9000
+
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/minio/health/live"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        command: server /data
  
     steps:
       - name: Checkout repository
@@ -52,4 +68,9 @@ jobs:
          SECRET_KEY: test_secret_key
          ALGORITHM: HS256
          ACCESS_TOKEN_EXPIRE_MINUTES: 60
+         MINIO_ENDPOINT: localhost:9000
+         MINIO_ACCESS_KEY: minioadmin
+         MINIO_SECRET_KEY: minioadmin123
+         MINIO_BUCKET_NAME: documents
+         MINIO_SECURE: "false"
         run: pytest
