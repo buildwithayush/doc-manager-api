@@ -7,9 +7,6 @@ class DocumentBase(BaseModel):
     description: str|None = Field(None,examples=['Annual architecture proposal'])
 
 # Create Document
-class DocumentCreate(DocumentBase):
-    pass
-
 class DocumentUpdate(BaseModel):
     title :str|None = Field(None,min_length=1,max_length=255)
     description:str|None = None
@@ -17,6 +14,10 @@ class DocumentUpdate(BaseModel):
 class DocumentResponse(DocumentBase):
     id: int
     user_id: int
+    file_name:str
+    file_type:str
+    file_size:int
+    file_path:str
     created_at: datetime
     updated_at: datetime
 

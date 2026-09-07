@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 from app.database import Base,get_db
 from sqlalchemy import create_engine
+from app.services.storage_services import init_storage
 
 
 engine = create_engine(settings.TEST_DATABASE_URL)
@@ -20,9 +21,10 @@ def overridden_get_db():
 
 @pytest.fixture(scope='session',autouse=True)
 def setup_database():
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)     
+   Base.metadata.create_all(bind=engine)
+   init_storage()
+   yield
+   Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture()
 def client():
