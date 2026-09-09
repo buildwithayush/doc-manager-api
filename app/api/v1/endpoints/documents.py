@@ -1,17 +1,20 @@
 from app.services.document_service import get_user_document,get_document_by_id
 from app.services.document_service import delete_document ,update_document,create_document_with_file
 from sqlalchemy.orm import Session
-from app.schemas.document_schema import DocumentResponse,DocumentUpdate
-from fastapi import APIRouter,Depends, File, Form, UploadFile,status,Query
+from app.schemas.document_schema import DocumentResponse,DocumentUpdate,DocumentBase
+from fastapi import APIRouter,Depends, File, Form, UploadFile,status,Query,BackgroundTasks
 from app.database import get_db
 from app.api.deps import get_current_user
 from app.models.user_model import User
 from app.services.storage_services import upload_file_to_minio
+from rag.tasks import process_pdf_document_tasks
+
 
 router = APIRouter()
 
 @router.post('/upload',response_model=DocumentResponse,status_code=status.HTTP_201_CREATED)
 def upload_document(
+    background_tasks: BackgroundTasks,
     title: str = Form(...,min_length=1,max_length=255),
     description: str | None = Form(None),
     file:UploadFile = File(...),
@@ -20,7 +23,7 @@ def upload_document(
 ):
     object_path, file_size = upload_file_to_minio(file=file,user_id=current_user.id)
 
-    return create_document_with_file(
+    new_doc = create_document_with_file(
         db=db,
         title=title,
         description=description,
@@ -28,8 +31,12 @@ def upload_document(
         file_path=object_path,
         file_type=file.content_type or "application/octet-stream",
         file_size=file_size,
-        user_id=current_user.id
+        user_id=current_user.id,
+        status='processing'
     )
+
+    background_tasks.add_task(process_pdf_document_tasks, new_doc.id, object_path)
+    return new_doc
 
 @router.get('/', response_model=list[DocumentResponse])
 def get_all_documents(db:Session = Depends(get_db),skip:int = Query(0,ge=0),limit: int = Query(20, ge=1, le=100),  current_user:User= Depends(get_current_user)):
