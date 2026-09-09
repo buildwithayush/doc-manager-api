@@ -25,5 +25,6 @@ class Document(Base):
     file_type: Mapped[str] = mapped_column(String(100), nullable=False)   
     file_size: Mapped[int] = mapped_column(Integer, nullable=False)
 
+    status : Mapped[str] = mapped_column(String(50),default='processing',nullable=False)
 
     owner: Mapped['User'] = relationship('User', back_populates='documents')

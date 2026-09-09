@@ -22,7 +22,8 @@ def create_document_with_file(
         file_path:str,
         file_type:str,
         file_size:int,
-        user_id:int
+        user_id:int,
+        status: str = "processing"
 ) -> Document:
     new_doc = Document(
         title = title,
@@ -31,7 +32,8 @@ def create_document_with_file(
         file_path = file_path,
         file_type = file_type,
         file_size=file_size,
-        user_id=user_id
+        user_id=user_id,
+        status = status
     )
     db.add(new_doc)
     db.commit()

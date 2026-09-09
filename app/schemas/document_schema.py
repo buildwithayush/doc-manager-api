@@ -20,6 +20,7 @@ class DocumentResponse(DocumentBase):
     file_path:str
     created_at: datetime
     updated_at: datetime
+    status:str
 
     model_config = ConfigDict(from_attributes=True)
 
