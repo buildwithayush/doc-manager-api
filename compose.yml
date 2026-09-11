@@ -19,7 +19,7 @@ services:
       - .:/app
 
   db:
-    image: postgres:17
+    image: pgvector/pgvector:pg17
     container_name: doc_manager_postgres
     restart: always
 
