@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.database import Base
 from app.models.user_model import User
 from app.models.document_model import Document
+from app.models.chunk_model import DocumentChunk
 
 
 # this is the Alembic Config object, which provides
