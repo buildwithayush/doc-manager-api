@@ -14,7 +14,12 @@ class Settings(BaseSettings):
     MINIO_BUCKET_NAME: str = "documents"
     MINIO_SECURE: bool = False
     MINIO_TEST_BUCKET_NAME: str = "documents-test"
-    
+
+    OLLAMA_EMBED_URL: str = "http://ollama:11434/api/embeddings"
+    EMBEDDING_MODEL_NAME: str = "nomic-embed-text"
+    OLLAMA_CHAT_URL:str = "http://ollama:11434/api/chat"
+    CHAT_MODEL_NAME: str = "qwen3:4b"
+
     model_config = SettingsConfigDict(env_file = '.env',extra='ignore')
 
 settings = Settings()    

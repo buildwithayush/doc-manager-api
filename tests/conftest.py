@@ -2,12 +2,12 @@ import pytest
 from app.main import app
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import text
 from app.core.config import settings
 from app.database import Base,get_db
 from sqlalchemy import create_engine
 from minio.deleteobjects import DeleteObject
 from app.services.storage_services import init_storage, minio_client
-
 
 engine = create_engine(settings.TEST_DATABASE_URL)
 
@@ -22,6 +22,8 @@ def overridden_get_db():
 
 @pytest.fixture(scope='session',autouse=True)
 def setup_database():
+   with engine.begin() as connection:
+      connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
    Base.metadata.create_all(bind=engine)
    init_storage()
    yield

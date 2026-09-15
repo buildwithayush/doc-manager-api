@@ -8,7 +8,7 @@ from app.database import Base
 
 if TYPE_CHECKING:
     from app.models.user_model import User
-
+    from app.models.chunk_model import DocumentChunk
 
 class Document(Base):
     __tablename__ = 'documents'
@@ -28,3 +28,8 @@ class Document(Base):
     status : Mapped[str] = mapped_column(String(50),default='processing',nullable=False)
 
     owner: Mapped['User'] = relationship('User', back_populates='documents')
+    chunks: Mapped[list['DocumentChunk']] = relationship(
+        "DocumentChunk",
+        back_populates="document",
+        cascade="all, delete-orphan",
+    )
