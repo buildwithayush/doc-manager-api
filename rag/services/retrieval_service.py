@@ -17,9 +17,8 @@ class RetrievalService:
         query_builder = db.query(DocumentChunk).order_by(
             DocumentChunk.embedding.cosine_distance(query_vector)
         )
-
         # Optional: If user want to chat with a specific document, filter by document_id
-        if document_id:
+        if document_id is not None and document_id > 0:
             query_builder = query_builder.filter(DocumentChunk.document_id == document_id)
 
         matched_chunks = query_builder.limit(top_k).all()
