@@ -1,5 +1,4 @@
 import logging
-import os
 from importlib import import_module
 from app.core.config import settings
 from app.services.storage_services import minio_client
@@ -10,9 +9,6 @@ try:
     fitz = import_module("fitz")
 except ImportError:
     fitz = import_module("pymupdf")
-
-EXTRACTED_DOC_DIR = os.path.join(os.getcwd(), "docs", "extracted")
-os.makedirs(EXTRACTED_DOC_DIR, exist_ok=True)
 
 class PDFExtractionService:
 
@@ -53,11 +49,3 @@ class PDFExtractionService:
             if response:
                 response.close()
                 response.release_conn()
-
-    @staticmethod
-    def save_extracted_text(doc_id: int, text: str) -> str:
-        file_path = os.path.join(EXTRACTED_DOC_DIR, f"{doc_id}.txt")
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(text)
-        logger.info("File saved to %s", file_path)
-        return file_path
