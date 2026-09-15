@@ -14,7 +14,7 @@ class EmbeddingService:
             with httpx2.Client(timeout=60.0) as client:
                 response = client.post(
                     settings.OLLAMA_EMBED_URL,
-                    json={"model": settings.MODEL_NAME, "prompt": text}
+                    json={"model": settings.EMBEDDING_MODEL_NAME, "prompt": text}
                 )
                 if response.status_code != 200:
                     raise HTTPException(
