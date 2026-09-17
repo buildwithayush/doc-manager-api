@@ -19,8 +19,6 @@ def process_pdf_document_tasks(doc_id:int,object_path:str) -> None:
         
         text = PDFExtractionService.extract_text_from_minio_stream(object_path=object_path)
 
-        PDFExtractionService.save_extracted_text(doc_id=doc_id,text=text)
-
         chunks = ChunkService.chunk_text(text=text, chunk_size=1000, chunk_overlap=200)
 
         chunk_records = []
