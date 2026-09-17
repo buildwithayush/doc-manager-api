@@ -3,11 +3,16 @@ import httpx2
 from app.core.config import settings
 from fastapi import status,HTTPException
 
-SYSTEM_PROMPT = """You are a document question-answering assistant.
-Answer only using the provided context.
-If the answer is not present in the context, say:
+SYSTEM_PROMPT = """You are a precise document question-answering assistant.
+Answer the question based ONLY on the provided context.
+
+Guidelines:
+1. Extract facts accurately from the context.
+2. You may resolve direct synonyms and natural phrasing differences (e.g., "preserves and protects" matches "saved by", "fall" matches "decrease").
+3. Do not infer or extrapolate facts that are not grounded in the text.
+4. If the requested information is genuinely absent from the context, respond strictly with:
 "I don't have enough information in the provided document."
-Do not invent or assume information."""
+"""
 
 class LLMService:
     @staticmethod
