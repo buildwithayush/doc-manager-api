@@ -1,14 +1,23 @@
 import os
 import httpx2
+import yaml
 from app.core.config import settings
 from fastapi import status,HTTPException
-from langchain_core.prompts import load_prompt
+from langchain_core.prompts import ChatPromptTemplate, load_prompt
 
 PROMPT_FILE_PATH = os.path.join(
     os.path.dirname(__file__), "..", "prompts", "rag_prompt.yaml"
 )
 
-RAG_PROMPT_TEMPLATE = load_prompt(PROMPT_FILE_PATH)
+with open(PROMPT_FILE_PATH, "r", encoding="utf-8") as file:
+    prompt_config = yaml.safe_load(file)
+
+RAG_PROMPT_TEMPLATE = ChatPromptTemplate.from_messages(
+    [
+        (message["role"], message["content"])
+        for message in prompt_config["messages"]
+    ]
+)
 
 class LLMService:
     @staticmethod
@@ -38,6 +47,7 @@ class LLMService:
             "stream": False,
             "options": {"temperature": 0.1},
         }
+        print(payload["messages"])
 
         try:
             with httpx2.Client(timeout=120.0) as client:
