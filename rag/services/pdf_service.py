@@ -29,14 +29,15 @@ class PDFExtractionService:
 
             extracted_pages: list[str] = []
 
+            flags = fitz.TEXT_DEHYPHENATE | fitz.TEXT_PRESERVE_LIGATURES
             
             with fitz.open(stream=file_bytes, filetype="pdf") as doc:
                 total_pages = len(doc)
                 logger.info("Processing PDF with %s pages...", total_pages)
-
+                
                 for page_num in range(total_pages):
                     page = doc.load_page(page_num)
-                    page_text = page.get_text("text")
+                    page_text = page.get_text("text",sort = True,flags=flags)
                     
                     if page_text and page_text.strip():
                         extracted_pages.append(page_text.strip())
