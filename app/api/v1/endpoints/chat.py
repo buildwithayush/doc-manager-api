@@ -16,7 +16,7 @@ def chat_with_documents(
     chunks = RetrievalService.get_relevant_chunks(
         db=db,
         query=payload.question,
-        top_k=5,
+        top_k=3,
         document_id=payload.document_id
     )
 
