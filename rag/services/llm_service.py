@@ -45,7 +45,11 @@ class LLMService:
             "model": settings.CHAT_MODEL_NAME,
             "messages": formatted_messages,
             "stream": False,
-            "options": {"temperature": 0.1},
+            "think": False,
+            "options": {
+                "temperature": 0.1,
+                "num_ctx": 4096,
+            },
         }
         print(payload["messages"])
 
