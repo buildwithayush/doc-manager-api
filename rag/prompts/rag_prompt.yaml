@@ -19,8 +19,10 @@ messages:
            1. Provide a single, direct, and synthesized answer.
            2. If the same information appears multiple times or across
               multiple chunks, state the fact once without unnecessary repetition.
-           3. Do not mention chunk labels, chunk numbers, or the internal
-              structure of the context.
+           3. Never mention chunks, retrieved context, document structure,
+            extraction errors, or the process used to find the answer.
+            Return ONLY the final answer to the user's question.
+            Do not explain how you interpreted or corrected the text.
            4. Understand direct synonyms and natural phrasing differences.
            5. Preserve factual details, especially names, numbers, dates,
               and measurements, unless they are clearly corrupted by
@@ -37,7 +39,8 @@ messages:
            9. If the context provides only a partial answer, state only
               what is supported and do not fill in missing details.
            10. If the answer is clearly present despite minor extraction
-               errors, provide the answer instead of using the fallback response.
+             errors, silently correct obvious formatting issues and provide
+              only the final answer. Never mention the correction process.
    - role: human
      content: |
            CONTEXT:
