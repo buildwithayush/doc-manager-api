@@ -1,5 +1,8 @@
 import logging
 from importlib import import_module
+from typing import cast
+
+import pymupdf4llm
 from app.core.config import settings
 from app.services.storage_services import minio_client
 
@@ -8,7 +11,7 @@ logger = logging.getLogger(__name__)
 try:
     fitz = import_module("fitz")
 except ImportError:
-    fitz = import_module("pymupdf")
+    fitz = import_module("pymupdf4llm")
 
 class PDFExtractionService:
 
@@ -26,25 +29,11 @@ class PDFExtractionService:
             if not file_bytes:
                 logger.error("MinIO object %s is empty!", object_path)
                 return ""
-
-            extracted_pages: list[str] = []
-
-            flags = fitz.TEXT_DEHYPHENATE | fitz.TEXT_PRESERVE_LIGATURES
             
             with fitz.open(stream=file_bytes, filetype="pdf") as doc:
-                total_pages = len(doc)
-                logger.info("Processing PDF with %s pages...", total_pages)
-                
-                for page_num in range(total_pages):
-                    page = doc.load_page(page_num)
-                    page_text = page.get_text("text",sort = True,flags=flags)
-                    
-                    if page_text and page_text.strip():
-                        extracted_pages.append(page_text.strip())
-
-            full_text = "\n\n".join(extracted_pages)
-            logger.info("Extracted %s characters.", len(full_text))
-            return full_text
+            
+             md_text = cast(str,pymupdf4llm.to_markdown(doc,page_chunks=False))
+            return md_text
 
         finally:
             if response:
