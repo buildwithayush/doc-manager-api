@@ -1,7 +1,7 @@
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 
 class MarkdownChunkService:
-    # Jin headings par sections break karne hain
+    
     HEADERS_TO_SPLIT_ON = [
         ("#", "Header_1"),
         ("##", "Header_2"),
